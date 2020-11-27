@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\StudentSchoolworks;
+use App\Models\schoolworks;
+use App\Models\CourseStudents;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class StudentSchoolworksFactory extends Factory
@@ -22,7 +24,8 @@ class StudentSchoolworksFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'schoolwork_id'=>schoolworks::inRandomOrder()->first()->getKey(),
+            'course_student_id' => CourseStudents::inRandomOrder()->first()->getKey()
         ];
     }
 }

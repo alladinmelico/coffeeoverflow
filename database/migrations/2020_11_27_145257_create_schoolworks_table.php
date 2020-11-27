@@ -17,11 +17,11 @@ class CreateSchoolworksTable extends Migration
             $table->id();
             $table->foreignId('course_id')->constrained('courses')->ondelete('cascade');
             $table->integer('items')->unsigned();
-            $table->timestamp('deadline')->nullable();
+            $table->timestamp('deadline')->nullable()->default(now());
             $table->string('type', 100)->nullable()->default('assignment');
             $table->timestamps();
         });
-        
+
     }
 
     /**
