@@ -6,24 +6,13 @@ use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
-
 class LoginController extends Controller
 {
-    /**
-     * Redirect the user to the GitHub authentication page.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function redirectToProvider()
     {
         return Socialite::driver('google')->redirect();
     }
 
-    /**
-     * Obtain the user information from GitHub.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function handleProviderCallback()
     {
         // $user = Socialite::driver('google')->user();
@@ -63,12 +52,32 @@ class LoginController extends Controller
         return redirect()->to('/home');
     }
 
-    function getClient()
+    public function signup(){
+        // Get the API client and construct the service object.
+        $client = $this->getClient();
+        $service = new \Google_Service_Classroom($client);
+        dd($service);
+        // Print the first 10 courses the user has access to.
+        $optParams = array('pageSize' => 10);
+        $results = $service->courses->listCourses($optParams);
+
+        if (count($results->getCourses()) == 0) {
+        print "No courses found.\n";
+        } else {
+        print "Courses:\n";
+        foreach ($results->getCourses() as $course) {
+            printf("%s (%s)\n", $course->getName(), $course->getId());
+        }
+        }
+    }
+
+
+    protected function getClient()
     {
-        $client = new Google_Client();
+        $client = new \Google_Client();
         $client->setApplicationName('Google Classroom API PHP Quickstart');
-        $client->setScopes(Google_Service_Classroom::CLASSROOM_COURSES_READONLY);
-        $client->setAuthConfig('credentials.json');
+        $client->setScopes(\Google_Service_Classroom::CLASSROOM_COURSES_READONLY);
+        $client->setAuthConfig(public_path('credentials.json'));
         $client->setAccessType('offline');
         $client->setPrompt('select_account consent');
 
@@ -76,7 +85,7 @@ class LoginController extends Controller
         // The file token.json stores the user's access and refresh tokens, and is
         // created automatically when the authorization flow completes for the first
         // time.
-        $tokenPath = 'token.json';
+        $tokenPath = public_path('token.json'); //get from DB
         if (file_exists($tokenPath)) {
             $accessToken = json_decode(file_get_contents($tokenPath), true);
             $client->setAccessToken($accessToken);
@@ -90,8 +99,8 @@ class LoginController extends Controller
             } else {
                 // Request authorization from the user.
                 $authUrl = $client->createAuthUrl();
-                printf("Open the following link in your browser:\n%s\n", $authUrl);
-                print 'Enter verification code: ';
+                return redirect($authCode);
+                echo 'Enter verification code: ';
                 $authCode = trim(fgets(STDIN));
 
                 // Exchange authorization code for an access token.

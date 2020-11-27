@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('google_id')->unique();
             $table->string('avatar');
             $table->string('avatar_original');
+            $table->json('access_token')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();
