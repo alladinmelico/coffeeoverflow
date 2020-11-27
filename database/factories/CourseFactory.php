@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
 class CourseFactory extends Factory
 {
     /**
@@ -22,7 +22,9 @@ class CourseFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name'=> $this->faker->name,
+            'description'=> $this->faker->sentence,
+            'teacher_id'=> User::inRandomOrder()->first()->getKey()
         ];
     }
 }
