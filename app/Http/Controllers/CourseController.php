@@ -14,7 +14,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        return view('course.index');
+        $courses = Course::with(['teacher','students'])->orderBy('updated_at','DESC')->paginate(10);
+        return view('course.index', compact('courses'));
     }
 
     /**
@@ -46,7 +47,7 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        //
+        return view('course.show',compact('course'));
     }
 
     /**
