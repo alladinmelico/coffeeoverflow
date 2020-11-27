@@ -10,4 +10,5 @@ class StudentSchoolworks extends Pivot
 {
     use HasFactory;
     public $incrementing = true;
+    public $table = 'student_schoolworks';
 }

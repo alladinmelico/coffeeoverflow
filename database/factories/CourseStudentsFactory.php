@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Course;
+use App\Models\User;
 use App\Models\CourseStudents;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +24,8 @@ class CourseStudentsFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'course_id'=>Course::inRandomOrder()->first()->getKey(),
+            'student_id'=>User::inRandomOrder()->first()->getKey()
         ];
     }
 }
