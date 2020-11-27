@@ -9,5 +9,6 @@ use App\Models\Schoolworks;
 class CourseStudents extends Pivot
 {
     use HasFactory;
+    public $incrementing = true;
 
 }

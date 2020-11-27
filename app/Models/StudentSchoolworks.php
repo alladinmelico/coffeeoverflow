@@ -9,4 +9,5 @@ use  Illuminate\Database\Eloquent\Relations\Pivot;
 class StudentSchoolworks extends Pivot
 {
     use HasFactory;
+    public $incrementing = true;
 }
