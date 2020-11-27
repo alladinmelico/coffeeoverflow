@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Http;
 use App\Models\User;
 
 class LoginController extends Controller
@@ -31,6 +32,7 @@ class LoginController extends Controller
 
         try {
             $user = Socialite::driver('google')->user();
+            dd($user->token);
         } catch (\Exception $e) {
             return redirect('/login');
         }
@@ -55,6 +57,67 @@ class LoginController extends Controller
             auth()->login($newUser, true);
         }
 
+
+
+        dd($newUser);
         return redirect()->to('/home');
+    }
+
+    function getClient()
+    {
+        $client = new Google_Client();
+        $client->setApplicationName('Google Classroom API PHP Quickstart');
+        $client->setScopes(Google_Service_Classroom::CLASSROOM_COURSES_READONLY);
+        $client->setAuthConfig('credentials.json');
+        $client->setAccessType('offline');
+        $client->setPrompt('select_account consent');
+
+        // Load previously authorized token from a file, if it exists.
+        // The file token.json stores the user's access and refresh tokens, and is
+        // created automatically when the authorization flow completes for the first
+        // time.
+        $tokenPath = 'token.json';
+        if (file_exists($tokenPath)) {
+            $accessToken = json_decode(file_get_contents($tokenPath), true);
+            $client->setAccessToken($accessToken);
+        }
+
+        // If there is no previous token or it's expired.
+        if ($client->isAccessTokenExpired()) {
+            // Refresh the token if possible, else fetch a new one.
+            if ($client->getRefreshToken()) {
+                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+            } else {
+                // Request authorization from the user.
+                $authUrl = $client->createAuthUrl();
+                printf("Open the following link in your browser:\n%s\n", $authUrl);
+                print 'Enter verification code: ';
+                $authCode = trim(fgets(STDIN));
+
+                // Exchange authorization code for an access token.
+                $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
+                $client->setAccessToken($accessToken);
+
+                // Check to see if there was an error.
+                if (array_key_exists('error', $accessToken)) {
+                    throw new Exception(join(', ', $accessToken));
+                }
+            }
+            // Save the token to a file.
+            if (!file_exists(dirname($tokenPath))) {
+                mkdir(dirname($tokenPath), 0700, true);
+            }
+            file_put_contents($tokenPath, json_encode($client->getAccessToken()));
+        }
+        return $client;
+    }
+
+
+    public function reqData(){
+        $response = Http::get('https://classroom.googleapis.com/v1/courses',[
+            'studentId' =>auth()->user()->google_id,
+            'access_token'=> 'eRrEAtCmvCPO76dlzp3LDMnUgUcOsPqwePKL4VuD&code=4%2F0AY0e-g6QmoTxvUey5vbTRe6etr462Pjit2tQS_jKVzaFvLbBBsWuAyvHmEEVgkcsB-XY_w&scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=consent#'
+        ]);
+        dd($response);
     }
 }
