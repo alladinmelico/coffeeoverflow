@@ -25,6 +25,6 @@ Route::get('/signup/google/callback', [LoginController::class, 'handleProviderCa
 Route::get('/signup/google', [LoginController::class, 'redirectToProvider']);
 Route::get('/reqData', [LoginController::class, 'reqData']);
 
-// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-//     return view('dashboard');
-// })->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
