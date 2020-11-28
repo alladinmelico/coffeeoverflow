@@ -67,6 +67,7 @@ class LoginController extends Controller
         $user = User::find(Auth::user()->id);
         $user->access_token = json_encode($accessToken);
         $user->save();
+        return redirect()->to('/');
     }
 
     public function reqData(){

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CourseController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +25,8 @@ Route::get('/callback', [LoginController::class, 'signUpCallback']);
 Route::get('/signup/google/callback', [LoginController::class, 'handleProviderCallback']);
 Route::get('/signup/google', [LoginController::class, 'redirectToProvider']);
 Route::get('/reqData', [LoginController::class, 'reqData']);
+
+Route::resource('course', CourseController::class);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
