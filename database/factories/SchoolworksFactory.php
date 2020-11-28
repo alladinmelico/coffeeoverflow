@@ -23,6 +23,8 @@ class SchoolworksFactory extends Factory
     public function definition()
     {
         return [
+            'name'=>$this->faker->sentence,
+            'description'=>$this->faker->sentence,
             'course_id'=> Course::inRandomOrder()->first()->getKey(),
             'items'=> $this->faker->numberBetween($min = 0, $max = 100)
         ];

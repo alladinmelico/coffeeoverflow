@@ -25,6 +25,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('is_teacher', function ($teacher) {
+            return $teacher == auth()->user()->id;
+        });
     }
 }

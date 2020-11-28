@@ -15,6 +15,8 @@ class CreateSchoolworksTable extends Migration
     {
         Schema::create('schoolworks', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('description');
             $table->foreignId('course_id')->constrained('courses')->ondelete('cascade');
             $table->integer('items')->unsigned();
             $table->timestamp('deadline')->nullable()->default(now());

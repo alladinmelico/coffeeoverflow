@@ -3,83 +3,75 @@
 namespace App\Http\Controllers;
 
 use App\Models\schoolworks;
+use App\Models\StudentSchoolworks;
 use Illuminate\Http\Request;
 
 class SchoolworksController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $schoolworks = StudentSchoolworks::with('schoolwork')->where('course_student_id','=',auth()->user()->id)->get();
+        return view('schoolwork.index',compact('schoolworks'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        $course = request('course');
+        $type = ['Assignment'=>'Assignment','Announcement'=>'Announcement', 'Material'=>'Material' ];
+        return view('schoolwork.create',compact('type','course'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'description' => 'required|min:5',
+            'items' => 'required|numeric',
+            'course_id' => 'required',
+            'type' => 'required|in:Assignment,Announcement,Material'
+        ]);
+
+        schoolworks::create($validatedData);
+
+        return redirect('/course')->with('success', $request->input('type').' posted successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\schoolworks  $schoolworks
-     * @return \Illuminate\Http\Response
-     */
-    public function show(schoolworks $schoolworks)
+    public function show(schoolworks $schoolwork)
     {
-        //
+        $submission = StudentSchoolworks::where([['schoolwork_id','=',$schoolwork->id],['course_student_id','=', auth()->user()->id]])->get();
+        $isTeacher = ($schoolwork->course->teacher_id == auth()->user()->id) ? true:false;
+        return view('schoolwork.show',compact('schoolwork','submission','isTeacher'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\schoolworks  $schoolworks
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(schoolworks $schoolworks)
+    public function edit(schoolworks $schoolwork)
     {
-        //
+        if(auth()->user()->id != $schoolwork->course->teacher_id){
+            return redirect('/schoolwork');
+        }
+        $type = ['Assignment'=>'Assignment','Announcement'=>'Announcement', 'Material'=>'Material' ];
+        $course = $schoolwork->course->id;
+        return view('schoolwork.edit',compact('schoolwork','type','course'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\schoolworks  $schoolworks
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, schoolworks $schoolworks)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required|min:5',
+            'items' => 'required|numeric',
+            'course_id' => 'required',
+            'type' => 'required|in:Assignment,Announcement,Material'
+        ]);
+        $schoolworks->update($request->all());
+
+        return redirect()->route('schoolwork.index')
+        ->with('success', $request->input('type').' edited successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\schoolworks  $schoolworks
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(schoolworks $schoolworks)
     {
-        //
+        $course->delete();
+        return redirect()->route('schoolwork.index')
+        ->with('success','Course Deleted successfully');
     }
 }

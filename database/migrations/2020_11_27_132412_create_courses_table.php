@@ -17,9 +17,11 @@ class CreateCoursesTable extends Migration
             $table->id();
             $table->string('name', 100)->default('Course Title');
             $table->text('description')->nullable()->default('Course Description');
-            $table->bigInteger('teacher_id')->unsigned();
             $table->timestamps();
-            $table->foreign('teacher_id')->references('id')->on('users')->onDelete('restrict');            
+            $table->bigInteger('teacher_id')->unsigned();
+            $table->foreign('teacher_id')->references('id')->on('users')->onDelete('restrict');
+            $table->bigInteger('subject_id')->unsigned();
+            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('restrict');
         });
     }
 

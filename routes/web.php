@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\SchoolworksController;
+use App\Http\Controllers\StudentSchoolworksController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,3 +24,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 Route::resource('course', CourseController::class)->middleware('auth');
+Route::resource('schoolwork', SchoolworksController::class)->middleware('auth');
+Route::resource('submission', StudentSchoolworksController::class)->middleware('auth');

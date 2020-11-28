@@ -21,30 +21,23 @@
             </div>
         </div>
     @endif
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
             <div clas="bg-gray-900 min-h-screen">
-                <button><a href="{{route('course.create')}}"><i class="fa fa-plus" aria-hidden="true"></i></a></button>
-                @foreach ($courses as $course)
+                @foreach ($schoolworks as $schoolwork)
                     <x-card>
                         <x-slot name="head">
-                            <a href="{{route('course.show',$course->id)}}">{{$course->name}}</a>
+                            <a class="text-lg text-green-400" href="{{route('schoolwork.show',$schoolwork->schoolwork->id)}}">{{$schoolwork->schoolwork->name}}</a>
                         </x-slot>
                         <x-slot name="body">
-                            {{$course->description}}
+                            {{$schoolwork->schoolwork->description}}
                         </x-slot>
                         <x-slot name="footer">
-                            {{$course->updated_at}}
+                            {{$schoolwork->schoolwork->updated_at}}
                         </x-slot>
                     </x-card>
                 @endforeach
             </div>
         </div>
     </div>
-
-    @push('modals')
-
-    @endpush
 </x-app-layout>

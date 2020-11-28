@@ -11,4 +11,6 @@ class CourseStudents extends Pivot
     use HasFactory;
     public $incrementing = true;
     public $table = 'course_students'; //getting error from default 's'
+
+    protected $fillable = ['course_id', 'student_id'];
 }
