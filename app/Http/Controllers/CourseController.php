@@ -37,7 +37,7 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -48,7 +48,14 @@ class CourseController extends Controller
      */
     public function show($id)
     {
-        //
+        $course = Http::get('https://classroom.googleapis.com/v1/courses/'.$id,[
+            'access_token'=> json_decode(auth()->user()->access_token)->access_token
+        ])->json();
+        $coursework = Http::get('https://classroom.googleapis.com/v1/courses/'.$id.'/courseWork',[
+            'access_token'=> json_decode(auth()->user()->access_token)->access_token
+        ])->json();
+        dd(auth()->user()->access_token);
+        return view('course.show', compact('course','coursework'));
     }
 
     /**
