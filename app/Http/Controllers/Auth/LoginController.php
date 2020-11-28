@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     public function redirectToProvider()
@@ -15,13 +16,9 @@ class LoginController extends Controller
 
     public function handleProviderCallback()
     {
-        // $user = Socialite::driver('google')->user();
-
-        // $user->token;
+        $user = Socialite::driver('google')->stateless()->user();
 
         try {
-            $user = Socialite::driver('google')->user();
-            dd($user->token);
         } catch (\Exception $e) {
             return redirect('/login');
         }
@@ -44,31 +41,47 @@ class LoginController extends Controller
             $newUser->avatar_original = $user->avatar_original;
             $newUser->save();
             auth()->login($newUser, true);
+
+            $client = new \Google_Client();
+            $client->setApplicationName('Google Classroom API PHP Quickstart');
+            $client->setScopes(\Google_Service_Classroom::CLASSROOM_COURSES);
+            $client->setAuthConfig(public_path('credentials.json'));
+            $client->setAccessType('offline');
+            $client->setPrompt('select_account consent');
+            $authUrl = $client->createAuthUrl();
+            return redirect($authUrl);
         }
-
-
-
-        dd($newUser);
         return redirect()->to('/home');
     }
 
     public function signup(){
         // Get the API client and construct the service object.
         $client = $this->getClient();
-        $service = new \Google_Service_Classroom($client);
-        dd($service);
-        // Print the first 10 courses the user has access to.
-        $optParams = array('pageSize' => 10);
-        $results = $service->courses->listCourses($optParams);
 
-        if (count($results->getCourses()) == 0) {
-        print "No courses found.\n";
-        } else {
-        print "Courses:\n";
-        foreach ($results->getCourses() as $course) {
-            printf("%s (%s)\n", $course->getName(), $course->getId());
-        }
-        }
+        dd($client);
+        dd(substr($client, 0, strpos($client, "code=")));
+        return redirect($client);
+
+        // Exchange authorization code for an access token.
+        $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
+        $client->setAccessToken($accessToken);
+
+    }
+
+    public function signUpCallback(){
+        $client = new \Google_Client();
+        $client->setApplicationName('Google Classroom API PHP Quickstart');
+        $client->setScopes(\Google_Service_Classroom::CLASSROOM_COURSES);
+        $client->setAuthConfig(public_path('credentials.json'));
+        $client->setAccessType('offline');
+        $client->setPrompt('select_account consent');
+
+        $authCode = request()->code.'&scope='.request()->scope;
+        $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
+
+        $user = User::find(Auth::user()->id);
+        $user->access_token = json_encode($accessToken);
+        $user->save();
     }
 
 
@@ -76,19 +89,16 @@ class LoginController extends Controller
     {
         $client = new \Google_Client();
         $client->setApplicationName('Google Classroom API PHP Quickstart');
-        $client->setScopes(\Google_Service_Classroom::CLASSROOM_COURSES_READONLY);
+        $client->setScopes(\Google_Service_Classroom::CLASSROOM_COURSES);
         $client->setAuthConfig(public_path('credentials.json'));
         $client->setAccessType('offline');
         $client->setPrompt('select_account consent');
 
-        // Load previously authorized token from a file, if it exists.
-        // The file token.json stores the user's access and refresh tokens, and is
-        // created automatically when the authorization flow completes for the first
-        // time.
-        $tokenPath = public_path('token.json'); //get from DB
-        if (file_exists($tokenPath)) {
-            $accessToken = json_decode(file_get_contents($tokenPath), true);
-            $client->setAccessToken($accessToken);
+        if(Auth::check()){
+            $token = json_decode(auth()->user()->access_token, true); //get from DB
+            if ($token != null) {
+                $client->setAccessToken($token);
+            }
         }
 
         // If there is no previous token or it's expired.
@@ -99,24 +109,8 @@ class LoginController extends Controller
             } else {
                 // Request authorization from the user.
                 $authUrl = $client->createAuthUrl();
-                return redirect($authCode);
-                echo 'Enter verification code: ';
-                $authCode = trim(fgets(STDIN));
-
-                // Exchange authorization code for an access token.
-                $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
-                $client->setAccessToken($accessToken);
-
-                // Check to see if there was an error.
-                if (array_key_exists('error', $accessToken)) {
-                    throw new Exception(join(', ', $accessToken));
-                }
+                return redirect($authUrl);
             }
-            // Save the token to a file.
-            if (!file_exists(dirname($tokenPath))) {
-                mkdir(dirname($tokenPath), 0700, true);
-            }
-            file_put_contents($tokenPath, json_encode($client->getAccessToken()));
         }
         return $client;
     }

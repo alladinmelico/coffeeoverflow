@@ -20,9 +20,9 @@ Route::get('/', function () {
 
 
 Route::get('/login', [LoginController::class, 'redirectToProvider']);
-Route::get('/callback', [LoginController::class, 'handleProviderCallback']);
-Route::get('/request', [LoginController::class, 'reqData']);
-Route::get('/signup', [LoginController::class, 'signup']);
+Route::get('/callback', [LoginController::class, 'signUpCallback']);
+Route::get('/signup/google/callback', [LoginController::class, 'handleProviderCallback']);
+Route::get('/signup/google', [LoginController::class, 'redirectToProvider']);
 
 // Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 //     return view('dashboard');
