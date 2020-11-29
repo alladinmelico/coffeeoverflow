@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\User::factory(20)->create();
+        $this->call([
+            ContactNumberSeeder::class
+        ]);
+        
         \App\Models\Course::factory(10)->create();
         \App\Models\CourseStudents::factory(10)->create();
         \App\Models\SchoolWorks::factory(10)->create();
