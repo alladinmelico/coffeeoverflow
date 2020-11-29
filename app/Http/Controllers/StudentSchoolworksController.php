@@ -22,7 +22,7 @@ class StudentSchoolworksController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'file' => 'required|file|mimes:pdf',
+            'file' => 'required|file|mimes:pdf|max:10240',
             'schoolwork_id' => 'required',
             'course_student_id' => 'required',
         ]);
@@ -30,10 +30,12 @@ class StudentSchoolworksController extends Controller
         $submission = new StudentSchoolworks();
         $submission->schoolwork_id = $validatedData['schoolwork_id'];
         $submission->course_student_id = $validatedData['course_student_id'];
+        $media = $submission->addMedia($validatedData['file'])->toMediaCollection('submission');
         $submission->save();
-        $submission->addMedia($validatedData['file'])->toMediaCollection('submission');
 
-        return redirect('/course')->with('success', 'Class created successfully.');
+        $submission->media_id = $media->id;
+        $submission->save();
+        return redirect()->route('course.show',$validatedData['schoolwork_id'])->with('success', 'Class created successfully.');
     }
 
     public function show(StudentSchoolworks $studentSchoolwork)

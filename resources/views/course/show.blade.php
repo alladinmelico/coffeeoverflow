@@ -1,4 +1,5 @@
 <x-app-layout>
+    @includeWhen(session('success'), 'include.alert.success')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if (auth()->user()->id == $course->teacher_id)

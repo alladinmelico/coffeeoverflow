@@ -11,8 +11,8 @@
             @endif
             <div clas="bg-gray-900 min-h-screen">
                 <p>{{$schoolwork->name}}</p>
-                @includeWhen($submission->count()==0, 'submission.create', ['some' => 'data'])
-                @includeWhen($submission->count()!=0, 'include.submission.document', ['some' => 'data'])
+                @includeWhen($media==null, 'submission.create', ['some' => 'data'])
+                @includeWhen($media!=null, 'include.submission.document')
             </div>
         </div>
     </div>

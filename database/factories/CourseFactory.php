@@ -25,6 +25,7 @@ class CourseFactory extends Factory
         return [
             'name'=> $this->faker->name,
             'description'=> $this->faker->sentence,
+            'code'=> $this->faker->regexify('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'),
             'teacher_id'=> User::inRandomOrder()->first()->getKey(),
             'subject_id'=> Subject::inRandomOrder()->first()->getKey(),
         ];

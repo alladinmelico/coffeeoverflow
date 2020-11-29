@@ -27,13 +27,13 @@
                 @foreach ($schoolworks as $schoolwork)
                     <x-card>
                         <x-slot name="head">
-                            <a class="text-lg text-green-400" href="{{route('schoolwork.show',$schoolwork->schoolwork->id)}}">{{$schoolwork->schoolwork->name}}</a>
+                            <a class="text-lg text-green-400" href="{{ route('schoolwork.show',($schoolwork->course)->schoolworks[0]['id']) }}">{{($schoolwork->course)->schoolworks[0]['name']}}</a>
                         </x-slot>
                         <x-slot name="body">
-                            {{$schoolwork->schoolwork->description}}
+                            {{($schoolwork->course)->schoolworks[0]['description']}}
                         </x-slot>
                         <x-slot name="footer">
-                            {{$schoolwork->schoolwork->updated_at}}
+                            {{($schoolwork->course)->schoolworks[0]['updated_at']}}
                         </x-slot>
                     </x-card>
                 @endforeach

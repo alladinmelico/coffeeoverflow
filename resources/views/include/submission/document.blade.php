@@ -1,5 +1,9 @@
 <div>
-    <object data="your_url_to_pdf" type="application/pdf">
-        <embed src="your_url_to_pdf" type="application/pdf" />
-    </object>
+    @if ($media!=null)
+        <object data="{{$media}}" type="application/pdf" class="min-w-full min-h-screen">
+            <embed src="{{$media}}" type="application/pdf" />
+        </object>
+    @else
+        <p>Invalid File</p>
+    @endif
 </div>

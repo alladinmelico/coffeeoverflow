@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Subject;
+use App\Models\CourseStudents;
 use App\Models\SchoolWorks;
 use Illuminate\Http\Request;
 
@@ -11,9 +12,9 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::orderBy('updated_at','DESC')->paginate(10);
-
-        return view('course.index',compact('courses'));
+        $courses = CourseStudents::with('course')->where('student_id', '=', auth()->user()->id)->orderBy('updated_at','DESC')->orderBy('updated_at','DESC')->paginate(10);
+        $personalCourses = Course::with('studentClasses')->where('teacher_id', '=', auth()->user()->id)->orderBy('updated_at','DESC')->paginate(10);
+        return view('course.index',compact('courses','personalCourses'));
     }
 
     public function create()
@@ -29,6 +30,7 @@ class CourseController extends Controller
         $validatedData = $request->validate([
             'name' => 'required',
             'description' => 'required|min:5',
+            'code' => 'required',
             'subject_id' => 'required',
             'teacher_id' => 'required'
         ]);
@@ -60,6 +62,7 @@ class CourseController extends Controller
         $request->validate([
             'name' => 'required',
             'description' => 'required|min:5',
+            'code' => 'required',
             'subject_id' => 'required',
             'teacher_id' => 'required'
         ]);
@@ -74,5 +77,20 @@ class CourseController extends Controller
         $course->delete();
         return redirect()->route('course.index')
         ->with('success','Course Deleted successfully');
+    }
+
+    public function enroll(Request $request){
+        $validatedData = $request->validate([
+            'code' => 'required|exists:courses,code',
+        ]);
+
+        $course = Course::where('code', '=', $validatedData['code'])->first();
+        $courseStudent = new CourseStudents();
+        $courseStudent->course_id = $course->id;
+        $courseStudent->student_id = auth()->user()->id;
+        $courseStudent->save();
+
+        return redirect()->route('course.index')
+        ->with('success','You enrolled successfully');
     }
 }

@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\schoolworks;
 use App\Models\StudentSchoolworks;
+use App\Models\CourseStudents;
 use Illuminate\Http\Request;
 
 class SchoolworksController extends Controller
 {
     public function index()
     {
-        $schoolworks = StudentSchoolworks::with('schoolwork')->where('course_student_id','=',auth()->user()->id)->get();
+        $schoolworks = CourseStudents::with('course')->where('student_id', '=', auth()->user()->id)->orderBy('updated_at','DESC')->orderBy('updated_at','DESC')->paginate(10);
+        // dd($schoolworks);
         return view('schoolwork.index',compact('schoolworks'));
     }
 
@@ -33,14 +35,18 @@ class SchoolworksController extends Controller
 
         schoolworks::create($validatedData);
 
-        return redirect('/course')->with('success', $request->input('type').' posted successfully.');
+        return redirect()->route('course.show', $validatedData['course_id'])->with('success', $request->input('type').' posted successfully.');
     }
 
     public function show(schoolworks $schoolwork)
     {
-        $submission = StudentSchoolworks::where([['schoolwork_id','=',$schoolwork->id],['course_student_id','=', auth()->user()->id]])->get();
+        $submission = StudentSchoolworks::where([['schoolwork_id','=',$schoolwork->id],['course_student_id','=', auth()->user()->id]])->first();
         $isTeacher = ($schoolwork->course->teacher_id == auth()->user()->id) ? true:false;
-        return view('schoolwork.show',compact('schoolwork','submission','isTeacher'));
+        $media = null;
+        if($submission && ($submission['media_id'] != null)){
+            $media = $submission->submissionUrl;
+        }
+        return view('schoolwork.show',compact('schoolwork','submission','isTeacher','media'));
     }
 
     public function edit(schoolworks $schoolwork)
