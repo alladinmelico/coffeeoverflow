@@ -7,6 +7,48 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Setup
+
+This is a laravel application: to make a working copy, please do the following steps:
+a more detailed setup instructions of a cloned github repository of a laravel app is available at https://devmarketer.io/learn/setup-laravel-project-cloned-github-com/
+
+1. Plase have the following installed in your machine: 
+Apache, MySql, Php (We used XAMPP during the development)
+Composer
+git
+
+2. Do the following to have a local development copy:
+    1. clone this repository
+        git clone https://github.com/alladinmelico/coffeeoverflow
+    2. open a shell (e.g. cmd or powershell in windows) to the project directory
+        e.g. cd \[path\]/coffeeoverflow
+    3. Start apache and mysql service.
+        if you have XAMPP installed, start the  apache and mysql from the XAMPP control panel
+    4. run the following commands (assuming you have composer set up properly)
+        1. composer install
+        2. copy ".env.example" ".env"
+        3. php artisan key:generate
+    5. make a database that this application will be using:
+        sample using xampp shell with default credentials:
+        mysql -uroot
+        create database \`coffeeoverflow\`;
+    6. replace the following variables in your .env:
+        DB_DATABASE=\[the database you created\]
+        #port 8000 is the default port of `php artisan serve`
+        APP_URL=http://localhost:8000 
+        NEXMO_KEY=\[Api key from vonage (formerly nexmo)\]
+        NEXMO_SECRET=\[Api secretfrom vonage (formerly nexmo)\]
+        \#  if you do not have any of the variables above in .env, please put one.
+    7. run the following commands:
+        1. php artisan migrate
+        2. php artidan db:seed
+        3. php artisan serve
+
+If you put `php artisan serve` as is,  you may type localhost:8000 on your browser and start browsing.
+We also keep a running deployment of this at http://coffeeoverflow.herokuapp.com/
+
+You may secure a Vonage/Nexmo API key on https://developer.nexmo.com/messaging/sms/overview 
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
