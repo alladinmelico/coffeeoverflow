@@ -5,8 +5,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             <div clas="bg-gray-900 min-h-screen">
-                <div class="p-5 bg-cool-gray-200">
-                    <div class="bg-green-100">
+                <div class="p-5 bg-blue-light">
+                    <div class="self">
                         @include('include.course.enroll')
                     </div>
                     <h4>Mga tinuturo kong Asignatura</h4>

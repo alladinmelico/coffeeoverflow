@@ -17,11 +17,11 @@ class DatabaseSeeder extends Seeder
             SubjectSeeder::class
         ]);
 
-        \App\Models\User::factory(20)->create();
-        \App\Models\Course::factory(10)->create();
-        \App\Models\CourseStudents::factory(10)->create();
-        \App\Models\SchoolWorks::factory(10)->create();
-        \App\Models\StudentSchoolWorks::factory(10)->create();
+        \App\Models\User::factory(300)->create();
+        \App\Models\Course::factory(50)->create();
+        \App\Models\CourseStudents::factory(50)->create();
+        \App\Models\SchoolWorks::factory(50)->create();
+        \App\Models\StudentSchoolWorks::factory(100)->create();
 
     }
 }
