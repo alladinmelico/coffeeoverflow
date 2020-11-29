@@ -1,4 +1,4 @@
-<div class="flex flex-col">
+<div class="container mx-auto">
     <label for="file" class="mt-4 mb-1 uppercase text-grey-darker text-xs font-bold">File (pdf)</label>
     <div class="flex flex-row">
         <span class="flex items-center bg-grey-lighter rounded rounded-r-none px-3 font-bold text-grey-darker"><i class="fa fa-file" aria-hidden="true"></i></span>

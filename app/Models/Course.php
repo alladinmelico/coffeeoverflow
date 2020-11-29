@@ -32,4 +32,8 @@ class Course extends Model
     public function schoolworks(){
         return $this->hasMany('App\Models\Schoolworks');
     }
+
+    public function subject(){
+        return $this->belongsTo('App\Models\Subject');
+    }
 }
