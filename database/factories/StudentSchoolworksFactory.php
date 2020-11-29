@@ -25,7 +25,7 @@ class StudentSchoolworksFactory extends Factory
     {
         return [
             'schoolwork_id'=>schoolworks::inRandomOrder()->first()->getKey(),
-            'course_student_id' => CourseStudents::inRandomOrder()->first()->getKey()
+            'course_student_id' => (CourseStudents::inRandomOrder()->get('student_id')->first())->student_id
         ];
     }
 }

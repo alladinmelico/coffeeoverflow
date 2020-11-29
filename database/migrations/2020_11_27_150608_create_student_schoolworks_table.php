@@ -15,8 +15,11 @@ class CreateStudentSchoolworksTable extends Migration
     {
         Schema::create('student_schoolworks', function (Blueprint $table) {
             $table->id();
+            $table->integer('score')->nullable();
+            $table->unsignedBigInteger('media_id')->nullable();
             $table->foreignId('schoolwork_id')->constrained('schoolworks')->onDelete('cascade');
-            $table->foreignId('course_student_id')->constrained('course_students');
+            $table->unsignedBigInteger('course_student_id');
+            $table->foreign('course_student_id')->references('student_id')->on('course_students');
             $table->timestamps();
         });
     }
