@@ -33,7 +33,10 @@ class SchoolworksController extends Controller
             'type' => 'required|in:Assignment,Announcement,Material'
         ]);
 
-        schoolworks::create($validatedData);
+        $schoolwork = schoolworks::create($validatedData);
+        foreach($schoolwork->course->students as $student) {
+            $student->notify(new NewSchoolwork());
+        }
 
         return redirect()->route('course.show', $validatedData['course_id'])->with('success', $request->input('type').' posted successfully.');
     }

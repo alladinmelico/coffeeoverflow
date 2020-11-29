@@ -57,7 +57,7 @@ class NewSchoolwork extends Notification
     public function toNexmo($notifiable)
     {
         return (new NexmoMessage)
-                    ->content('You have a new schoolwork!');
+                    ->content('This is a test SMS sending to randomly generated numbers. please disregard');
     }
 
     /**
