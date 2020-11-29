@@ -19,8 +19,12 @@ class CreateStudentSchoolworksTable extends Migration
             $table->unsignedBigInteger('media_id')->nullable();
 
 
-            $table->foreignId('schoolwork_id')->constrained('schoolworks')->onDelete('cascade');
-            $table->foreignId('course_student_id')->constrained('course_students')->onDelete('cascade');
+            $table->unsignedBigInteger('schoolwork_id');
+            $table->foreign('schoolwork_id')->references('id')->on('schoolworks')->onDelete('cascade')->onUpdate('cascade');
+
+            $table->unsignedBigInteger('course_student_id');
+            $table->foreign('course_student_id')->references('id')->on('course_students')->onDelete('cascade')->onUpdate('cascade');
+
             $table->timestamps();
         });
     }
