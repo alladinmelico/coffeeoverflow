@@ -17,7 +17,11 @@ class DatabaseSeeder extends Seeder
             SubjectSeeder::class
         ]);
 
-        \App\Models\User::factory(300)->create();
+
+        \App\Models\User::factory(300)->create();       
+        $this->call([
+            ContactNumberSeeder::class
+        ]);
         \App\Models\Course::factory(50)->create();
         \App\Models\CourseStudents::factory(50)->create();
         \App\Models\SchoolWorks::factory(50)->create();
