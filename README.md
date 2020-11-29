@@ -10,6 +10,7 @@
 ## Setup
 
 This is a laravel application: to make a working copy, please do the following steps:
+
 a more detailed setup instructions of a cloned github repository of a laravel app is available at https://devmarketer.io/learn/setup-laravel-project-cloned-github-com/
 
 1. Plase have the following installed in your machine: 
@@ -45,6 +46,7 @@ git
         3. php artisan serve
 
 If you put `php artisan serve` as is,  you may type localhost:8000 on your browser and start browsing.
+
 We also keep a running deployment of this at http://coffeeoverflow.herokuapp.com/
 
 You may secure a Vonage/Nexmo API key on https://developer.nexmo.com/messaging/sms/overview 
