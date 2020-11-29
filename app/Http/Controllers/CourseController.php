@@ -13,7 +13,7 @@ class CourseController extends Controller
     public function index()
     {
         $courses = CourseStudents::with('course')->where('student_id', '=', auth()->user()->id)->orderBy('updated_at','DESC')->orderBy('updated_at','DESC')->paginate(10);
-        $personalCourses = Course::with('studentClasses')->where('teacher_id', '=', auth()->user()->id)->orderBy('updated_at','DESC')->paginate(10);
+        $personalCourses = Course::with('studentClasses','subject')->where('teacher_id', '=', auth()->user()->id)->orderBy('updated_at','DESC')->paginate(10);
         return view('course.index',compact('courses','personalCourses'));
     }
 
