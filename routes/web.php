@@ -27,3 +27,7 @@ Route::post('/enroll', [CourseController::class, 'enroll'])->name('enroll');
 Route::resource('course', CourseController::class)->middleware('auth');
 Route::resource('schoolwork', SchoolworksController::class)->middleware('auth');
 Route::resource('submission', StudentSchoolworksController::class)->middleware('auth');
+
+Route::get('/smstest', function() {
+    App\Models\User::first()->notify(new App\Notifications\NewSchoolwork());
+});
