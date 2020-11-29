@@ -1,8 +1,11 @@
-<div class="bg-white shadow p-3 rounded lg:w-64">
-    <div class="flex flex-row">
+
+<div class="bg-math-background bg-cover bg-no-repeat border-black border-1 rounded-lg shadow">
+    <div class="flex flex-row items-center">
         {{$head}}
     </div>
-    <div class="mt-6">
+    </div>
+
+    <div class=" m-4 text-center">
         {{$body}}
     </div>
     <div class="mt-6">

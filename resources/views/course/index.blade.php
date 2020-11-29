@@ -4,9 +4,11 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
+
             <div clas="bg-blue-100 min-h-screen">
                 <div class="p-5 bg-blue-100">
                     <div class="flex justify-end">
+
                         @include('include.course.enroll')
                     </div>
                     <div class="container w-1/3 flex flex-row">
